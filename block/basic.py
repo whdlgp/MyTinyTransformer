@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 
 class MaskedAttentionHead(nn.Module):
-    def __init__(self, d_model, d_k, max_seq_len):
+    def __init__(self, d_model, d_k, max_seq_len, dropout):
         # d_model: length of embedding vector per token
         # d_k: length of output per token
         # max_seq_len: Max length of input sequence
@@ -26,6 +26,9 @@ class MaskedAttentionHead(nn.Module):
         # [1, 1, 1, 1]
         mask = torch.tril(torch.ones(max_seq_len, max_seq_len))
         self.register_buffer("mask", mask)
+
+        # Dropout for training
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
         # T: Sequence length (T <= max_seq_len)
@@ -52,6 +55,9 @@ class MaskedAttentionHead(nn.Module):
         # Final attention score
         attn = F.softmax(scores, dim=-1)
 
+        # Dropout for training
+        attn = self.dropout(attn)
+
         # (T × T) @ (T × d_k) = (T × d_k)
         out = attn @ V
 
@@ -60,7 +66,7 @@ class MaskedAttentionHead(nn.Module):
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, d_model, num_heads, max_seq_len):
+    def __init__(self, d_model, num_heads, max_seq_len, dropout):
         # d_model: length of embedding vector per token
         # num_heads: number of attention head
         # max_seq_len: Max length of input sequence
@@ -76,7 +82,7 @@ class MultiHeadAttention(nn.Module):
         # Multiple Attention Head
         self.heads = nn.ModuleList()
         for _ in range(num_heads):
-            head = MaskedAttentionHead(d_model, d_k, max_seq_len)
+            head = MaskedAttentionHead(d_model, d_k, max_seq_len, dropout)
             self.heads.append(head)
 
         # W_o: (d_model, d_model), weights for mixing attn. outputs
@@ -104,7 +110,7 @@ class MultiHeadAttention(nn.Module):
 
 
 class FeedForward(nn.Module):
-    def __init__(self, d_model, d_ff):
+    def __init__(self, d_model, d_ff, dropout):
         # d_model: length of embedding vector per token
         # d_ff: hidden layer size in feed-forward network
         super().__init__()
@@ -114,6 +120,9 @@ class FeedForward(nn.Module):
         # W_1: (d_ff, d_model)
         self.W_2 = nn.Linear(d_ff, d_model)
 
+        # Dropout for training
+        self.dropout = nn.Dropout(dropout)
+
     def forward(self, x):
         # Batch dimension (B) is omitted in comment for simplicity.
         # x: (T × d_model)
@@ -122,6 +131,8 @@ class FeedForward(nn.Module):
         x = self.W_1(x)
         # Activation
         x = F.relu(x)
+        # Dropout for training
+        x = self.dropout(x)
         # (T x d_ff) @ (d_ff, d_model) = (T × d_model)
         x = self.W_2(x)
 
@@ -130,7 +141,7 @@ class FeedForward(nn.Module):
 
 
 class TransformerBlock(nn.Module):
-    def __init__(self, d_model, num_heads, d_ff, max_seq_len):
+    def __init__(self, d_model, num_heads, d_ff, max_seq_len, dropout):
         # d_model: length of embedding vector per token
         # num_heads: number of attention head
         # d_ff: hidden layer size in feed-forward network
@@ -138,9 +149,9 @@ class TransformerBlock(nn.Module):
         
         super().__init__()
 
-        self.attention = MultiHeadAttention(d_model, num_heads, max_seq_len)
+        self.attention = MultiHeadAttention(d_model, num_heads, max_seq_len, dropout)
         self.norm1 = nn.LayerNorm(d_model)
-        self.feed_forward = FeedForward(d_model, d_ff)
+        self.feed_forward = FeedForward(d_model, d_ff, dropout)
         self.norm2 = nn.LayerNorm(d_model)
 
     def forward(self, x):

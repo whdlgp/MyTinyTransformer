@@ -11,6 +11,7 @@ if __name__ == "__main__":
     d_ff = 128
     num_layers = 2
     max_seq_len = 16
+    dropout = 0.1
 
     model = BasicModel(
         vocab_size,
@@ -18,7 +19,8 @@ if __name__ == "__main__":
         num_heads,
         d_ff,
         num_layers,
-        max_seq_len
+        max_seq_len,
+        dropout
     )
 
     B = 2
