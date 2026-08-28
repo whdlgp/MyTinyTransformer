@@ -49,6 +49,10 @@ class CharDataset(Dataset):
         return len(self.data) - self.seq_len
 
     def __getitem__(self, idx):
+        # Example:
+        # Original: A B C D E F
+        # Input:    A B C D E
+        # Label:      B C D E F
         input_ids = self.data[idx : idx + self.seq_len]
         labels = self.data[idx + 1 : idx + self.seq_len + 1]
         return input_ids, labels

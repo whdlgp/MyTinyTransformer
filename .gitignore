@@ -219,3 +219,9 @@ __marimo__/
 
 # Downloaded dataset
 data/
+
+# Test results
+checkpoints/
+
+# config file
+config.yaml
