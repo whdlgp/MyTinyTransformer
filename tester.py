@@ -2,7 +2,7 @@ import os
 import torch
 import torch.nn.functional as F
 
-from block.model import BasicModel
+from block.model import MODEL_REGISTRY
 from tokenizer.simple_tokenizer import Tokenizer
 from dataloader.tinyshakespeare import prepare_files, get_dataloader
 from util.checkpoint import load_checkpoint
@@ -25,7 +25,8 @@ class Tester:
             self.tokenizer = Tokenizer.from_text(f.read())
 
         # Model
-        self.model = BasicModel(
+        model_cls = MODEL_REGISTRY[self.m_cfg["type"]]
+        self.model = model_cls(
                         self.tokenizer.vocab_size, self.m_cfg["d_model"], self.m_cfg["num_heads"],
                         self.m_cfg["d_ff"], self.m_cfg["num_layers"], self.m_cfg["max_seq_len"], self.m_cfg["dropout"]
                     ).to(self.device)
