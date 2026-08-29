@@ -103,3 +103,93 @@ Now, by your hath well marr
 ```
 
 </details>
+
+### Batched MHA Implementation
+Achieved ~1.9x speedup (1:15:03 → 0:39:26, total training).
+
+<details> <summary>Training log</summary>
+
+```
+(mytinytransformer) PS E:\MyTinyTransformer> uv run train.py 
+device: cuda (NVIDIA GeForce RTX 3080 Ti, 12.0GB)
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:46<00:00, 61.49it/s, loss=1.6035]
+epoch 0 | train loss 1.8305 | val loss 1.5924
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:45<00:00, 61.71it/s, loss=1.4220]
+epoch 1 | train loss 1.4789 | val loss 1.5081
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:42<00:00, 62.67it/s, loss=1.3877]
+epoch 2 | train loss 1.3989 | val loss 1.4791
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:40<00:00, 63.28it/s, loss=1.3316]
+epoch 3 | train loss 1.3492 | val loss 1.4636
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:46<00:00, 61.42it/s, loss=1.3455]
+epoch 4 | train loss 1.3149 | val loss 1.4554
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:46<00:00, 61.46it/s, loss=1.1955]
+epoch 5 | train loss 1.2902 | val loss 1.4540
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:47<00:00, 61.29it/s, loss=1.2645]
+epoch 6 | train loss 1.2706 | val loss 1.4532
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:49<00:00, 60.63it/s, loss=1.1969]
+epoch 7 | train loss 1.2543 | val loss 1.4588
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:48<00:00, 61.13it/s, loss=1.2651]
+epoch 8 | train loss 1.2404 | val loss 1.4580
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:51<00:00, 60.16it/s, loss=1.2403]
+epoch 9 | train loss 1.2281 | val loss 1.4628
+checkpoint saved: checkpoints/model.pt
+training finished in 0:39:26
+```
+
+</details>
+
+<details> <summary>Test log</summary>
+
+```
+(mytinytransformer) PS E:\MyTinyTransformer> uv run tester.py
+device: cuda (NVIDIA GeForce RTX 3080 Ti, 12.0GB)
+test loss: 1.7551 | perplexity: 5.78
+chat mode, type a prompt (or 'exit' to quit)
+> hello. my friend.
+hello. my friend.
+
+Nurse:
+No, madam, yours, my friends is no need unto:
+Lest the censure can and break to earth,
+The fine of England, chasting the dead off,
+The market wherein the land of her contempt,
+Which is this b
+> Adam:
+Adam:
+That looks yet heaven the east hearts of your trick
+Against the more than will shake you.
+
+HASTINGS:
+What fear the royal kneels
+In the cause of his soul to have sons are prove all,
+For cannot do not
+> Dear my princess.
+Dear my princess. This is the prince
+And do welcomes by the giance, thou art too late
+God and deserves my best he wear to shame;
+And, if thou must deliver'd my life,
+And shall be since the hours of the child,
+In the w
+> q
+qlast would be loyal be strong
+That their brothers. Forbid a home!
+Go to: fear not be gone, God he say, spirit the
+And so do meet work, sir.
+
+MERCUTIO:
+You can not say should have expose it
+with lost:
+>
+```
+
+</details>
+
