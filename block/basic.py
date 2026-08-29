@@ -33,15 +33,15 @@ class MaskedAttentionHead(nn.Module):
     def forward(self, x):
         # T: Sequence length (T <= max_seq_len)
         # Batch dimension (B) is omitted in comment for simplicity.
-        # x: (T × d_model)
+        # x: (T x d_model)
         B, T, _ = x.shape
 
-        # (T × d_model) @ (d_model × d_k) = (T × d_k)
+        # (T x d_model) @ (d_model x d_k) = (T x d_k)
         Q = self.W_q(x)
         K = self.W_k(x)
         V = self.W_v(x)
 
-        # (T × d_k) @ (d_k × T) = (T × T)
+        # (T x d_k) @ (d_k x T) = (T x T)
         scores = Q @ K.transpose(-2, -1) / (self.d_k ** 0.5)
 
         # Apply mask
@@ -58,10 +58,10 @@ class MaskedAttentionHead(nn.Module):
         # Dropout for training
         attn = self.dropout(attn)
 
-        # (T × T) @ (T × d_k) = (T × d_k)
+        # (T x T) @ (T x d_k) = (T x d_k)
         out = attn @ V
 
-        # (T × d_k)
+        # (T x d_k)
         return out
 
 
@@ -91,15 +91,15 @@ class MultiHeadAttention(nn.Module):
     def forward(self, x):
         # T: Sequence length (T <= max_seq_len)
         # Batch dimension (B) is omitted in comment for simplicity.
-        # x: (T × d_model)
+        # x: (T x d_model)
 
-        # [(T × d_k), (T × d_k),,, (T × d_k)]
+        # [(T x d_k), (T x d_k),,, (T x d_k)]
         head_outputs = []
         for head in self.heads:
             head_out = head(x)
             head_outputs.append(head_out)
 
-        # [(T × d_k), (T × d_k),,, (T × d_k)] -> (T, d_model)
+        # [(T x d_k), (T x d_k),,, (T x d_k)] -> (T, d_model)
         concat = torch.cat(head_outputs, dim=-1)
 
         # (T, d_model) @ (d_model, d_model) = (T, d_model)
@@ -125,18 +125,18 @@ class FeedForward(nn.Module):
 
     def forward(self, x):
         # Batch dimension (B) is omitted in comment for simplicity.
-        # x: (T × d_model)
+        # x: (T x d_model)
 
-        # (T × d_model) @ (d_model, d_ff) = (T x d_ff)
+        # (T x d_model) @ (d_model, d_ff) = (T x d_ff)
         x = self.W_1(x)
         # Activation
         x = F.relu(x)
         # Dropout for training
         x = self.dropout(x)
-        # (T x d_ff) @ (d_ff, d_model) = (T × d_model)
+        # (T x d_ff) @ (d_ff, d_model) = (T x d_model)
         x = self.W_2(x)
 
-        # (T × d_model)
+        # (T x d_model)
         return x
 
 
