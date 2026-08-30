@@ -9,10 +9,26 @@ dependencies = [
     "tqdm>=4.70.0",
 ]
 
+[project.optional-dependencies]
+cu126 = []
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu126", marker = "extra == 'cu126'" },
+    { index = "pytorch-cu130", marker = "extra != 'cu126'" },
+]
+
 [[tool.uv.index]]
 name = "pytorch-cu130"
 url = "https://download.pytorch.org/whl/cu130"
 explicit = true
 
-[tool.uv.sources]
-torch = { index = "pytorch-cu130" }
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+# If CUDA 13.0 does not work,
+# uv sync --extra cu126
+# or
+# uv sync --extra cu126 --reinstall-package torch
