@@ -63,6 +63,9 @@ class Tester:
         cache = None
 
         for _ in range(max_new_tokens):
+            if ids.shape[1] >= max_seq_len:
+                break
+
             if cache is not None:
                 out = self.model(model_input, past_kv=cache)
             else:

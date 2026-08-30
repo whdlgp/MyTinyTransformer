@@ -203,3 +203,87 @@ with lost:
 
 </details>
 
+### MHA with KV Cache Implementation
+Achieved ~1.9x speedup (1:15:03 → 0:39:26, total training).
+
+<details> <summary>Training log</summary>
+
+```
+(mytinytransformer) PS E:\MyTinyTransformer> uv run train.py  
+device: cuda (NVIDIA GeForce RTX 3080 Ti, 12.0GB)                                                                                                                               
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:44<00:00, 62.00it/s, loss=1.5136]
+epoch 0 | train loss 1.8323 | val loss 1.5915
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:43<00:00, 62.31it/s, loss=1.4016]
+epoch 1 | train loss 1.4740 | val loss 1.5062
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:43<00:00, 62.36it/s, loss=1.4051]
+epoch 2 | train loss 1.3900 | val loss 1.4767
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:43<00:00, 62.45it/s, loss=1.3373]
+epoch 3 | train loss 1.3408 | val loss 1.4594
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:47<00:00, 61.40it/s, loss=1.2533]
+epoch 4 | train loss 1.3089 | val loss 1.4546
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:43<00:00, 62.35it/s, loss=1.2913]
+epoch 5 | train loss 1.2852 | val loss 1.4562
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:43<00:00, 62.36it/s, loss=1.3077]
+epoch 6 | train loss 1.2661 | val loss 1.4543
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:43<00:00, 62.48it/s, loss=1.2822]
+epoch 7 | train loss 1.2501 | val loss 1.4623
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:44<00:00, 62.23it/s, loss=1.2524]
+epoch 8 | train loss 1.2365 | val loss 1.4625
+checkpoint saved: checkpoints/model.pt
+train: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 13941/13941 [03:43<00:00, 62.42it/s, loss=1.1832]
+epoch 9 | train loss 1.2248 | val loss 1.4658
+checkpoint saved: checkpoints/model.pt
+training finished in 0:38:56
+```
+
+</details>
+
+<details> <summary>Test log</summary>
+
+```
+(mytinytransformer) PS E:\MyTinyTransformer> uv run tester.py
+device: cuda (NVIDIA GeForce RTX 3080 Ti, 12.0GB)
+test loss: 1.7649 | perplexity: 5.84
+chat mode, type a prompt (or 'exit' to quit)
+> hello. my friend.
+hello. my friend.
+
+GLOUCESTER:
+And that all art left thee from the queen,
+Which with all complose my feeming strives,
+Being once
+> Adam:
+Adam:
+He is no better bed foul there woe!
+
+LADY ANNE:
+Are you be gone.
+
+KING RICHARD II:
+For this we bethink me for a face?
+
+QUE
+> Dear my princess.
+Dear my princess.
+
+QUEEN MARGARET:
+Romeo! How shall do speak the prince,
+Thy side my earth, should thou come to the third;
+And w
+> q
+queen
+Yet a worst in the life lion of this death;
+And would we go follow the ladies of more ears!
+Fie, my sovereign, not should
+>
+```
+
+</details>
