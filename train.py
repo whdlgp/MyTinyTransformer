@@ -57,7 +57,7 @@ class Trainer:
         for inputs, labels in progress:
             # Inference
             inputs, labels = inputs.to(self.device), labels.to(self.device)
-            logits = self.model(inputs)
+            logits = self.model(inputs).logits
 
             # Loss
             loss = nn.functional.cross_entropy(logits.reshape(-1, self.tokenizer.vocab_size), labels.reshape(-1))
@@ -81,7 +81,7 @@ class Trainer:
         for inputs, labels in self.val_loader:
             # Inference
             inputs, labels = inputs.to(self.device), labels.to(self.device)
-            logits = self.model(inputs)
+            logits = self.model(inputs).logits
 
             # Loss
             loss = nn.functional.cross_entropy(logits.reshape(-1, self.tokenizer.vocab_size), labels.reshape(-1))

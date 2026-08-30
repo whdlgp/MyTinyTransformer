@@ -1,8 +1,17 @@
 import torch
 import torch.nn as nn
 
+from dataclasses import dataclass
+from typing import Any, Optional
+
 from .basic import TransformerBlock
 from .optimized import TransformerBlockBatched, TransformerBlockKVCache
+
+
+@dataclass
+class ModelOutput:
+    logits: torch.Tensor
+    cache: Optional[Any] = None
 
 
 class BasicModel(nn.Module):
@@ -38,7 +47,7 @@ class BasicModel(nn.Module):
 
         logits = self.output(x)
 
-        return logits
+        return ModelOutput(logits=logits)
 
 
 class BatchedHeadModel(nn.Module):
@@ -74,7 +83,7 @@ class BatchedHeadModel(nn.Module):
 
         logits = self.output(x)
 
-        return logits
+        return ModelOutput(logits=logits)
 
 
 class KVCacheModel(nn.Module):
@@ -119,7 +128,7 @@ class KVCacheModel(nn.Module):
 
         logits = self.output(x)
 
-        return logits, new_kv
+        return ModelOutput(logits=logits, cache=new_kv)
 
 
 MODEL_REGISTRY = {

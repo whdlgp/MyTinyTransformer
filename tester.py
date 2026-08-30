@@ -46,7 +46,7 @@ class Tester:
 
         for inputs, labels in test_loader:
             inputs, labels = inputs.to(self.device), labels.to(self.device)
-            logits = self.model(inputs)
+            logits = self.model(inputs).logits
             loss = F.cross_entropy(logits.reshape(-1, self.tokenizer.vocab_size), labels.reshape(-1))
             total_loss += loss.item()
 
@@ -59,12 +59,25 @@ class Tester:
         max_seq_len = self.m_cfg["max_seq_len"]
         ids = torch.tensor(self.tokenizer.encode(prompt), dtype=torch.long, device=self.device).unsqueeze(0)
 
+        model_input = ids[:, -max_seq_len:]
+        cache = None
+
         for _ in range(max_new_tokens):
-            context = ids[:, -max_seq_len:]
-            logits = self.model(context)
-            probs = F.softmax(logits[:, -1, :] / temperature, dim=-1)
+            if cache is not None:
+                out = self.model(model_input, past_kv=cache)
+            else:
+                out = self.model(model_input)
+
+            probs = F.softmax(out.logits[:, -1, :] / temperature, dim=-1)
             next_id = torch.multinomial(probs, num_samples=1)
             ids = torch.cat([ids, next_id], dim=1)
+
+            cache = out.cache
+
+            if cache is not None:
+                model_input = next_id
+            else:
+                model_input = ids[:, -max_seq_len:]
 
         return self.tokenizer.decode(ids[0].tolist())
 
@@ -75,7 +88,8 @@ class Tester:
             prompt = input("> ")
             if prompt.strip().lower() == "exit":
                 break
-
+            
+            # cache resets every turn
             output = self.generate(prompt)
             print(output)
 
