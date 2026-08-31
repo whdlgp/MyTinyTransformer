@@ -3,16 +3,12 @@ It just my tiny transformer
 
 ## How to Train & Test
 ### Setup env
-* run 'uv sync'
+* uv sync --extra cu130
 
 ### Troubleshooting: CUDA 13.0 not working
 If PyTorch with CUDA 13.0 doesn't work, install CUDA 12.6 build.
 
 * uv sync --extra cu126
-
-If PyTorch with CUDA 13.0 is already installed, reinstall it to use 12.6.
-
-* uv sync --extra cu126 --reinstall-package torch
 
 ### Train
 * Copy 'config_example.yaml' to 'config.yaml'
