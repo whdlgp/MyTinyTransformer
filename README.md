@@ -15,6 +15,15 @@ If PyTorch with CUDA 13.0 doesn't work, install CUDA 12.6 build.
 * run 'uv run train.py'
 ### Test
 * run 'uv run tester.py'
+### Quantization
+I used TorchAO's Weight-Only Quantization (`Int8WeightOnlyConfig`).  
+* Because my model is too small, it's showing almost no speedup.
+* Dramatically reduced weight file size.
+
+#### Quantize and save
+* run 'uv run quantize.py' for 
+#### Test quantized model
+* run 'uv run tester_quant.py'
 
 ## Train & Test results
 ### Basic imple.
@@ -200,7 +209,6 @@ with lost:
 </details>
 
 ### MHA with KV Cache Implementation
-Achieved ~1.9x speedup (1:15:03 → 0:39:26, total training).
 
 <details> <summary>Training log</summary>
 
@@ -279,6 +287,55 @@ queen
 Yet a worst in the life lion of this death;
 And would we go follow the ladies of more ears!
 Fie, my sovereign, not should
+>
+```
+
+</details>
+
+
+### Quantization Test
+
+Achieved an 87.9% size reduction(9.74MB → 1.17MB).
+
+<details> <summary>Test log</summary>
+
+```
+(mytinytransformer) PS E:\MyTinyTransformer> uv run python -X utf8 .\tester_quant.py
+W0902 23:28:46.863000 12052 .venv\Lib\site-packages\torch\utils\_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+device: cuda (NVIDIA GeForce RTX 3080 Ti, 12.0GB)
+test loss: 1.7553 | perplexity: 5.79
+chat mode, type a prompt (or 'exit' to quit)
+> hello. my friend.
+hello. my friend.
+
+KING RICHARD IIII:
+Why, then, I desire the consul?
+
+QUEEN ELIZABETH:
+I can tell my tent, or no; for I have wo
+> Adam:
+Adam:
+Go, that thou with thy best thee hence to thee
+Your will speak with it the house of you.
+
+SICINIUS:
+How! Warwick that's th
+> Dear my princess.
+Dear my princess.
+
+CLIFFORD:
+I thank your gentleman's straight three,
+The excuse have fall of business!
+
+ROMEO:
+Your fairery, my
+> q
+quarrel, and be more revenge
+Be not the way right and not die.
+
+GLOUCESTER:
+Who shall be your grace up whether I dare thee,
+And
 >
 ```
 

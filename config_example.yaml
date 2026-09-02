@@ -16,3 +16,6 @@ train:
 
 test:
   checkpoint_path: checkpoints/model_epoch6.pt
+
+quant:
+  checkpoint_path: checkpoints/model_quant.pt
